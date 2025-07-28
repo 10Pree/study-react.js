@@ -1,15 +1,23 @@
-import Header from "./components/Header"
-import { IconA, IconB } from "./components/Icon"
-import Image from "./components/Image"
+import Checkbox from "./components/Checkbox"
 function App() {
-
+  let todoList = [
+    {
+      text: "Codeing react",
+      isChecked: false
+    },
+    {
+      text: "Doing Document react",
+      isChecked: true
+    }
+  ]
   return (
     <>
       <div>
-        <Header/>
-        <IconA/>
-        <h1>Nonthanan simpree</h1>
-        <Image imageUrl={'https://img.youtube.com/vi/4tzmynf93p8/maxresdefault.jpg'}/>
+        {
+          todoList.map((todo, index) => (
+            <Checkbox key={index} text={todo.text} isChecked={todo.isChecked} />
+          ))
+        }
       </div>
     </>
   )
