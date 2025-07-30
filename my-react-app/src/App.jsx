@@ -1,44 +1,52 @@
-import { useState } from "react"
-import Checkbox from "./components/Checkbox"
-import Video from "./components/video"
+import { useEffect, useState } from "react"
+import axios from "axios"
+
+const BASE_URL = 'https://667b7c5fbd627f0dcc92c24f.mockapi.io/todos'
 
 function App() {
-  let todoList = [
-    {
-      text: "Coding react",
-      isChecked: false
-    },
-    {
-      text: "Doing Document react",
-      isChecked: true
-    }
-  ]
-  const [result, setResult] = useState(0)
-  const [playing, setPlaying] = useState(false)
+  const [todos, setTodos] = useState([])
+  const [isLoading, setLoading] = useState(true)
 
-  function buttonClick() {
-    setResult(result + 1)
+  async function fetchTodos() {
+    try{
+      const response = await axios.get(`${BASE_URL}`)
+      setTodos(response.data)
+      setLoading(false)
+    }catch (error){
+      console.log(error)
+    }
   }
-  function buttonPlayVideo () {
-    setPlaying(!playing)
+  async function deleteTodo(id) {
+    try{
+      setLoading(false)
+      await axios.delete(`${BASE_URL}/${id}`)
+      setLoading(true)
+      await fetchTodos()
+    }catch(error){
+      console.log(error)
+    }
   }
+  useEffect(() =>{
+    fetchTodos()
+  }, [])
   return (
     <>
-    <div>
-      Click New {result}
-      <button onClick={buttonClick}>Click</button>
-    </div>
-    <div>
-      <Video src={"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"} isPlaying={playing}/>
-      <button onClick={buttonPlayVideo}>{ playing ? "Pause" : "Play"}</button>
-    </div>
-      <div>
+    {
+      isLoading && <div>Loading...</div>
+    }
+    {
+      !isLoading &&  <div>
         {
-          todoList.map((todo, index) => (
-            <Checkbox key={index} text={todo.text} isChecked={todo.isChecked} />
+          todos.map((todo, index) => (
+            <div key={index}>
+              {todo.id} {todo.name}
+              <button>Edit</button>
+              <button onClick={async() =>{ await deleteTodo(todo.id)}}>Delete</button>
+            </div>
           ))
         }
       </div>
+    }
     </>
   )
 }
