@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { Link } from "react-router-dom"
 
 const BASE_URL = 'https://667b7c5fbd627f0dcc92c24f.mockapi.io/todos'
 
@@ -40,7 +41,9 @@ function App() {
           todos.map((todo, index) => (
             <div key={index}>
               {todo.id} {todo.name}
+              <Link to={`edit/${todo.id}`} >
               <button>Edit</button>
+              </Link>
               <button onClick={async() =>{ await deleteTodo(todo.id)}}>Delete</button>
             </div>
           ))
